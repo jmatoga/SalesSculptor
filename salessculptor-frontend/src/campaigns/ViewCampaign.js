@@ -60,14 +60,16 @@ export default function ViewCampaign() {
                 </li>
                 <li className="list-group-item">
                   <b>Product Description: </b>
+                  <br></br>
                   {campaign.product.productDesc}
                 </li>
                 <li className="list-group-item">
                   <b>Product Price: </b>
-                  {campaign.product.productPrice}
+                  {campaign.product.productPrice + "$"}
                 </li>
                 <li className="list-group-item">
                   <b>Keywords: </b>
+                  <br></br>
                   {campaign.keywords}
                 </li>
                 <li className="list-group-item">
