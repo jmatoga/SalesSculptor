@@ -13,6 +13,7 @@ export default function AddCampaign() {
     keywords: "",
     bidAmount: "",
     fund: "",
+    s,
     status: "ON",
     town: {
       townId: "",
