@@ -1,0 +1,13 @@
+package pl.salessculptor.scalessculptorbackend;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SalessculptorBackendApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SalessculptorBackendApplication.class, args);
+    }
+
+}
