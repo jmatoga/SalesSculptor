@@ -71,7 +71,7 @@ export default function EditCampaign() {
   const fetchData = async () => {
     try {
       const mainResponse = await axios.get(
-        `http://localhost:8090/campaigns/${id}`
+        `http://localhost:8090/campaigns/withDropDownListOptions/${id}`
       );
 
       const { campaign, product, town, keyword } = mainResponse.data;

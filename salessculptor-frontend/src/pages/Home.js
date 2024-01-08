@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function Home() {
   const [main, setMain] = useState([]);
+
+  const { id } = useParams();
 
   useEffect(() => {
     fetchData();
@@ -30,9 +32,13 @@ export default function Home() {
     }
   };
 
-  console.log(main);
+  const deleteCampaign = async (id) => {
+    await axios.delete(`http://localhost:8090/campaigns/${id}`);
+    fetchData();
+  };
+
   return (
-    <div className="container">
+    <div className="container-fluid">
       <div className="py-4">
         <table className="table border shadow">
           <thead>
@@ -62,14 +68,24 @@ export default function Home() {
                 <td>{data.town}</td>
                 <td>{data.radius}</td>
                 <td>
-                  <button className="btn btn-primary mx-1">View</button>
+                  <Link
+                    className="btn btn-primary mx-1"
+                    to={`/viewCampaign/${data.campaignId}`}
+                  >
+                    View
+                  </Link>
                   <Link
                     className="btn btn-outline-primary mx-1"
                     to={`/editCampaign/${data.campaignId}`}
                   >
                     Edit
                   </Link>
-                  <button className="btn btn-danger mx-1">Delete</button>
+                  <Link
+                    className="btn btn-danger mx-1"
+                    onClick={() => deleteCampaign(data.campaignId)}
+                  >
+                    Delete
+                  </Link>
                 </td>
               </tr>
             ))}

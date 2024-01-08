@@ -41,10 +41,3 @@ CREATE TABLE Campaigns
     updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES EmeraldAccount (account_id)
 );
-
--- CREATE TABLE CampaignKeywords
--- (
---     campaign_id BIGINT REFERENCES Campaigns (campaign_id),
---     keyword_id  BIGINT REFERENCES Keywords (keyword_id),
---     PRIMARY KEY (campaign_id, keyword_id)
--- );
