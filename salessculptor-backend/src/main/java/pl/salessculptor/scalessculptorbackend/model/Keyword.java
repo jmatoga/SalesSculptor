@@ -6,11 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "keywords")
+@Table(name = "Keywords")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Keyword {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "keyword_id")
@@ -18,5 +19,4 @@ public class Keyword {
 
     @Column(name = "keyword_name")
     private String keywordName;
-
 }

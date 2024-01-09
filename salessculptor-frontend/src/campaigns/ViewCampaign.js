@@ -74,15 +74,15 @@ export default function ViewCampaign() {
                 </li>
                 <li className="list-group-item">
                   <b>Bid amount: </b>
-                  {campaign.bidAmount}
+                  {campaign.bidAmount}$
                 </li>
                 <li className="list-group-item">
                   <b>Fund: </b>
-                  {campaign.fund}
+                  {campaign.fund}$
                 </li>
                 <li className="list-group-item">
                   <b>Status: </b>
-                  {campaign.status}
+                  <i>{campaign.status}</i>
                 </li>
                 <li className="list-group-item">
                   <b>Town: </b>
@@ -90,7 +90,7 @@ export default function ViewCampaign() {
                 </li>
                 <li className="list-group-item">
                   <b>Radius: </b>
-                  {campaign.radius}
+                  {campaign.radius} km
                 </li>
               </ul>
             </div>

@@ -59,14 +59,20 @@ export default function Home() {
             {main.map((data, index) => (
               <tr key={index}>
                 <th scope="row">{index + 1}</th>
-                <td>{data.name}</td>
+                <td>
+                  <i>
+                    <b>{data.name}</b>
+                  </i>
+                </td>
                 <td>{data.productName + " - " + data.productPrice + "$"}</td>
                 <td>{data.keywords}</td>
-                <td>{data.bidAmount}</td>
-                <td>{data.fund}</td>
-                <td>{data.status}</td>
+                <td>{data.bidAmount}$</td>
+                <td>{data.fund}$</td>
+                <td>
+                  <i>{data.status}</i>
+                </td>
                 <td>{data.town}</td>
-                <td>{data.radius}</td>
+                <td>{data.radius} km</td>
                 <td>
                   <Link
                     className="btn btn-primary mx-1"

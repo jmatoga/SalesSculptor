@@ -7,8 +7,12 @@ export default function EditCampaign() {
   const [towns, setTowns] = useState([]);
   const [products, setProducts] = useState([]);
   const [keywordsList, setKeywordsList] = useState([]);
+  const [oldValues, setOldValues] = useState({
+    bidAmount: "",
+    fund: "",
+  });
+
   const [campaign, setCampaign] = useState({
-    accountId: "1",
     name: "",
     keywords: "",
     bidAmount: "",
@@ -24,7 +28,14 @@ export default function EditCampaign() {
       productName: "",
       productPrice: "",
     },
+    account: {
+      accountId: "",
+      accountOwner: "",
+      balance: "",
+    },
   });
+  const [bidAmountErrorMessage, setBidAmountErrorMessage] = useState("");
+  const [fundErrorMessage, setFundErrorMessage] = useState("");
 
   let navigate = useNavigate();
   const { id } = useParams();
@@ -110,7 +121,16 @@ export default function EditCampaign() {
           townName: campaign.town.townName,
         },
         radius: campaign.radius,
-        accountId: campaign.accountId.toString(),
+        account: {
+          accountId: campaign.account.accountId.toString(),
+          accountOwner: campaign.account.accountOwner,
+          balance: campaign.account.balance,
+        },
+      });
+
+      setOldValues({
+        bidAmount: campaign.bidAmount,
+        fund: campaign.fund,
       });
     } catch (error) {
       console.error("Error loading data:", error);
@@ -123,18 +143,47 @@ export default function EditCampaign() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
+    if (parseFloat(oldValues.fund) > parseFloat(campaign.fund)) {
+      setFundErrorMessage("Fund cannot be less than previous fund");
+      return;
+    } else if (
+      parseFloat(campaign.fund - oldValues.fund) >
+      parseFloat(campaign.account.balance)
+    ) {
+      setFundErrorMessage("Added fund cannot be greater than balance");
+      return;
+    } else {
+      setFundErrorMessage("");
+    }
+
+    if (parseFloat(campaign.bidAmount) < 1.0) {
+      setBidAmountErrorMessage("Bid Amount should be at least 1$");
+      return;
+    }
+    if (parseFloat(campaign.bidAmount) > parseFloat(campaign.fund)) {
+      setBidAmountErrorMessage("Bid Amount cannot be greater than fund");
+      return;
+    }
+
+    setCampaign({
+      ...campaign,
+      account: {
+        balance: (campaign.account.balance -=
+          parseFloat(campaign.fund) - parseFloat(oldValues.fund)),
+      },
+    });
+
     await axios.put(`http://localhost:8090/campaigns/${id}`, campaign);
     navigate("/");
   };
-
-  const balance = 1000;
 
   return (
     <div className="container">
       <div className="row">
         <div className="col-md-3 border rounded p-4 mt-2 shadow">
           <h5 className="text-center mb-4">Balance</h5>
-          <h3 className="text-center">${balance}</h3>
+          <h3 className="text-center">${campaign.account.balance}</h3>
           {/* add account info */}
         </div>
         <div className="col-md-9 border rounded p-4 mt-2 shadow">
@@ -223,7 +272,15 @@ export default function EditCampaign() {
                 name="bidAmount"
                 pattern="^\d+(\.\d{1,2})?$"
                 value={campaign.bidAmount}
-                onChange={(e) => onInputChange(e)}
+                onChange={(e) => {
+                  // setCampaign({
+                  //   ...campaign,
+                  //   account: {
+                  //     balance: (campaign.account.balance -= parseFloat(fund)),
+                  //   },
+                  // });
+                  onInputChange(e);
+                }}
                 onInvalid={(e) => {
                   e.target.setCustomValidity(
                     "Please enter a number with up to two decimal places"
@@ -233,6 +290,11 @@ export default function EditCampaign() {
                   e.target.setCustomValidity("");
                 }}
               />
+              {bidAmountErrorMessage && (
+                <p style={{ color: "red", marginTop: "5px" }}>
+                  {bidAmountErrorMessage}
+                </p>
+              )}
             </div>
             <div className="mb-3">
               <label htmlFor="Fund" className="form-label">
@@ -245,7 +307,26 @@ export default function EditCampaign() {
                 name="fund"
                 pattern="^\d+(\.\d{1,2})?$"
                 value={campaign.fund}
-                onChange={(e) => onInputChange(e)}
+                onChange={(e) => {
+                  // setCampaign({
+                  //   ...campaign,
+                  //   account: {
+                  //     balance: (campaign.account.balance -= parseFloat(fund)),
+                  //   },
+                  // });
+                  // if (parseFloat(campaign.fund - e) < campaign.fund) {
+                  //   setFundErrorMessage(
+                  //     "Fund cannot be less than previous fund"
+                  //   );
+                  // } else if (
+                  //   parseFloat(campaign.fund - e) > campaign.account.balance
+                  // ) {
+                  //   setFundErrorMessage("Fund cannot be greater than balance");
+                  // } else {
+                  //   onInputChange(e);
+                  // }
+                  onInputChange(e);
+                }}
                 onInvalid={(e) => {
                   e.target.setCustomValidity(
                     "Please enter a number with up to two decimal places"
@@ -255,6 +336,11 @@ export default function EditCampaign() {
                   e.target.setCustomValidity("");
                 }}
               />
+              {fundErrorMessage && (
+                <p style={{ color: "red", marginTop: "5px" }}>
+                  {fundErrorMessage}
+                </p>
+              )}
             </div>
             <div className="mb-3">
               <label htmlFor="Status" className="form-label">

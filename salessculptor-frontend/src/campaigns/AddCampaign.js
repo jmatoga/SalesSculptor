@@ -8,7 +8,6 @@ export default function AddCampaign() {
   const [products, setProducts] = useState([]);
   const [keywordsList, setKeywordsList] = useState([]);
   const [campaign, setCampaign] = useState({
-    accountId: "1",
     name: "",
     keywords: "",
     bidAmount: "",
@@ -24,7 +23,14 @@ export default function AddCampaign() {
       productName: "",
       productPrice: "",
     },
+    account: {
+      accountId: "",
+      accountOwner: "",
+      balance: "",
+    },
   });
+  const [bidAmountErrorMessage, setBidAmountErrorMessage] = useState("");
+  const [fundErrorMessage, setFundErrorMessage] = useState("");
 
   let navigate = useNavigate();
 
@@ -69,7 +75,7 @@ export default function AddCampaign() {
         "http://localhost:8090/dropDownListOptions"
       );
 
-      const { product, town, keyword } = mainResponse.data;
+      const { product, town, keyword, account } = mainResponse.data;
       const productsData = product.map((product) => ({
         value: product.productId.toString(),
         label: `${product.productId}. ${product.productName} - ${product.productPrice}$`,
@@ -87,6 +93,20 @@ export default function AddCampaign() {
         label: keyword.keywordName,
       }));
       setKeywordsList(keywordsData);
+
+      const accountsData = account.map((item) => ({
+        accountId: item.accountId,
+        accountOwner: item.accountOwner,
+        balance: item.balance,
+      }));
+      setCampaign({
+        ...campaign,
+        account: accountsData[0],
+      });
+      console.log(
+        campaign.account[0].accountId + "!" + accountsData[0].accountId
+      );
+      //console.log(campaign.account.accountId + "!" + accountData.accountId);
     } catch (error) {
       console.error("Error loading data:", error);
     }
@@ -96,17 +116,8 @@ export default function AddCampaign() {
     fetchData();
   }, []);
 
-  const {
-    accountId,
-    productId,
-    name,
-    keywords,
-    bidAmount,
-    fund,
-    status,
-    town,
-    radius,
-  } = campaign;
+  const { productId, name, keywords, bidAmount, fund, status, town, radius } =
+    campaign;
 
   const onInputChange = (e) => {
     setCampaign({ ...campaign, [e.target.name]: e.target.value });
@@ -114,18 +125,39 @@ export default function AddCampaign() {
 
   const onSubmit = async (e) => {
     e.preventDefault(); // to make normal look of link
+
+    if (parseFloat(bidAmount) < 1) {
+      setBidAmountErrorMessage("Bid Amount should be at least 1$");
+      return;
+    }
+
+    if (parseFloat(fund) <= 0) {
+      setFundErrorMessage("Bid Amount should be at least 1$");
+      return;
+    } else if (parseFloat(fund) > campaign.account.balance) {
+      setFundErrorMessage("Fund cannot be greater than balance");
+      return;
+    }
+
+    setCampaign({
+      ...campaign,
+      account: {
+        balance: (campaign.account.balance -= parseFloat(fund)),
+      },
+    });
+
+    console.log(campaign);
+
     await axios.post("http://localhost:8090/campaigns/addCampaign", campaign);
     navigate("/");
   };
-
-  const balance = 1000;
 
   return (
     <div className="container">
       <div className="row">
         <div className="col-md-3 border rounded p-4 mt-2 shadow">
           <h5 className="text-center mb-4">Balance</h5>
-          <h3 className="text-center">${balance}</h3>
+          <h3 className="text-center">${campaign.account.balance}</h3>
           {/* account info */}
         </div>
         <div className="col-md-9 border rounded p-4 mt-2 shadow">
@@ -162,13 +194,6 @@ export default function AddCampaign() {
                 onBlur={(e) => {
                   e.target.setCustomValidity("");
                 }}
-                // onBlur={(e) => {
-                //   if (!e.target.value) {
-                //     e.target.setCustomValidity("Please select a product");
-                //   } else {
-                //     e.target.setCustomValidity("");
-                //   }
-                //}}
                 styles={{
                   control: (provided) => ({ ...provided, textAlign: "left" }),
                 }}
@@ -195,13 +220,6 @@ export default function AddCampaign() {
                 onBlur={(e) => {
                   e.target.setCustomValidity("");
                 }}
-                // onBlur={(e) => {
-                //   if (!e.target.value) {
-                //     e.target.setCustomValidity("Please keywords");
-                //   } else {
-                //     e.target.setCustomValidity("");
-                //   }
-                //}}
                 styles={{
                   control: (provided) => ({ ...provided, textAlign: "left" }),
                 }}
@@ -214,7 +232,7 @@ export default function AddCampaign() {
               <input
                 type={"text"}
                 className="form-control"
-                placeholder="Enter bid amount"
+                placeholder="Enter bid amount (min 1$)"
                 name="bidAmount"
                 pattern="^\d+(\.\d{1,2})?$"
                 value={bidAmount}
@@ -228,6 +246,11 @@ export default function AddCampaign() {
                   e.target.setCustomValidity("");
                 }}
               />
+              {bidAmountErrorMessage && (
+                <p style={{ color: "red", marginTop: "5px" }}>
+                  {bidAmountErrorMessage}
+                </p>
+              )}
             </div>
             <div className="mb-3">
               <label htmlFor="Fund" className="form-label">
@@ -250,6 +273,11 @@ export default function AddCampaign() {
                   e.target.setCustomValidity("");
                 }}
               />
+              {fundErrorMessage && (
+                <p style={{ color: "red", marginTop: "5px" }}>
+                  {fundErrorMessage}
+                </p>
+              )}
             </div>
             <div className="mb-3">
               <label htmlFor="Status" className="form-label">
@@ -329,7 +357,7 @@ export default function AddCampaign() {
                 placeholder="Enter accountId:"
                 name="accountId"
                 pattern="^\d+(\.\d{1,2})?$"
-                value={accountId}
+                value={campaign.account.accountId}
                 title="Please enter a number with up to two decimal places"
                 onChange={(e) => onInputChange(e)}
               />

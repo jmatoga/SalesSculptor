@@ -19,7 +19,7 @@ public class KeywordController {
     KeywordRepository keywordRepository;
 
     @GetMapping("")
-    public List<Keyword> getAllProducts() {
+    public List<Keyword> getAllKeywords() {
         return keywordRepository.findAll();
     }
 }
