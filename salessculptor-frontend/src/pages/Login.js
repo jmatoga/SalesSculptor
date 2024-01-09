@@ -27,19 +27,13 @@ function Login() {
       validationErrors.username === "" &&
       validationErrors.passwordHash === ""
     ) {
-      console.log("d" + values.username + "!" + values.passwordHash + "!");
-      console.log("!" + sessionStorage.getItem("loggedIn"));
       axios
         .post(`http://localhost:8090/accounts/login`, values)
         .then((res) => {
-          console.log("!" + res.data);
-
           alert("Logged successfully!");
           sessionStorage.setItem("loggedIn", "true");
           sessionStorage.setItem("loggedId", res.data.split(": ").pop());
-          console.log("!" + sessionStorage.getItem("loggedIn"));
           navigate("/campaigns");
-          console.log("mp");
         })
         .catch((error) => {
           if (error.response) {
