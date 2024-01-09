@@ -43,30 +43,22 @@ function Login() {
         })
         .catch((error) => {
           if (error.response) {
-            // Obsługa błędu z odpowiedzią od serwera z kodem statusu inny niż 2xx
             console.log("Server responded with an error:", error.response.data);
             if (error.response.status === 400) {
-              // Obsługa błędnego żądania (status 400)
               alert("Invalid username or password. Please try again.");
-              // Wyczyść dane sesji
               sessionStorage.clear();
             } else {
-              // Obsługa innych błędów
               alert("An error occurred. Please try again later.");
             }
           } else if (error.request) {
-            // Obsługa żądania, które nie otrzymało odpowiedzi
             console.log("No response received:", error.request);
             alert(
               "No response received from the server. Please try again later."
             );
           } else {
-            // Inne błędy
             console.log("Error setting up the request:", error.message);
             alert("Error setting up the request. Please try again later.");
           }
-          // Wyczyść dane sesji
-          // sessionStorage.clear();
           console.log(error);
         });
     }

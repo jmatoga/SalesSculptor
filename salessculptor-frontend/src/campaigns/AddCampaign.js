@@ -105,9 +105,6 @@ export default function AddCampaign() {
           balance: account.balance,
         },
       });
-
-      console.log(campaign.account.accountId + "!" + account.accountId);
-      //console.log(campaign.account.accountId + "!" + accountData.accountId);
     } catch (error) {
       console.error("Error loading data:", error);
     }
@@ -153,8 +150,6 @@ export default function AddCampaign() {
         balance: (campaign.account.balance -= parseFloat(fund)),
       },
     });
-
-    console.log(campaign);
 
     await axios.post("http://localhost:8090/campaigns/addCampaign", campaign);
     navigate("/campaigns");
@@ -334,13 +329,6 @@ export default function AddCampaign() {
                 onBlur={(e) => {
                   e.target.setCustomValidity("");
                 }}
-                // onBlur={(e) => {
-                //   if (!e.target.value) {
-                //     e.target.setCustomValidity("Please select a town");
-                //   } else {
-                //     e.target.setCustomValidity("");
-                //   }
-                // }}
                 styles={{
                   control: (provided) => ({ ...provided, textAlign: "left" }),
                 }}
@@ -368,21 +356,6 @@ export default function AddCampaign() {
                 }}
               />
             </div>
-            {/* <div className="mb-3">
-              <label htmlFor="Name" className="form-label">
-                Username
-              </label>
-              <input
-                type={"text"}
-                className="form-control"
-                placeholder="Enter accountId:"
-                name="accountId"
-                pattern="^\d+(\.\d{1,2})?$"
-                value={campaign.account.accountId}
-                title="Please enter a number with up to two decimal places"
-                onChange={(e) => onInputChange(e)}
-              />
-            </div> */}
             <button type="submit" className="btn btn-success">
               Submit
             </button>

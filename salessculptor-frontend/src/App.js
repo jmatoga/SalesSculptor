@@ -18,13 +18,10 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    const isLoggedIn = sessionStorage.getItem("loggedIn"); // Sprawdzenie, czy użytkownik jest zalogowany w localStorage
+    const isLoggedIn = sessionStorage.getItem("loggedIn"); // Check if the user is logged in to localStorage
     if (isLoggedIn) {
-      setLoggedIn(true); // Ustawienie stanu loggedIn na podstawie danych z localStorage
+      setLoggedIn(true); // setting the logged in status based on data from localStorage
     }
-    // Tutaj możesz dodać logikę sprawdzającą stan zalogowania
-    // np. sprawdzenie localStorage, sessionStorage itp.
-    // i ustawienie stanu loggedIn na tej podstawie
   }, []);
 
   return (
@@ -49,55 +46,6 @@ function App() {
       </Router>
     </div>
   );
-
-  // return (
-  //   <div className="App">
-  //     <Router>
-  //       <Navbar />
-  //       <Routes>
-  //         {!loggedIn ? (
-  //           <Route path="/" element={<Navigate to="/" replace />} />
-  //         ) : (
-  //           <>
-  //             <Route path="/campaigns" element={<Home />} />
-  //             <Route path="/addCampaign" element={<AddCampaign />} />
-  //             <Route path="/editCampaign/:id" element={<EditCampaign />} />
-  //             <Route path="/viewCampaign/:id" element={<ViewCampaign />} />
-  //           </>
-  //         )}
-  //       </Routes>
-  //     </Router>
-  //   </div>
-  // );
-
-  // const PrivateRoute = ({ element, path }) => {
-  //   return loggedIn ? (
-  //     <Route path={path} element={element} />
-  //   ) : (
-  //     <Navigate to="/" />
-  //   );
-  // };
-
-  // return (
-  //   <div className="App">
-  //     <Router>
-  //       <Navbar />
-  //       <Routes>
-  //         <Route exact path="/" element={<Login />} />
-  //         {loggedIn ? (
-  //           <>
-  //             <Route path="/campaigns" element={<Home />} />
-  //             <Route path="/addCampaign" element={<AddCampaign />} />
-  //             <Route path="/editCampaign/:id" element={<EditCampaign />} />
-  //             <Route path="/viewCampaign/:id" element={<ViewCampaign />} />
-  //           </>
-  //         ) : (
-  //           <Navigate to="/" />
-  //         )}
-  //       </Routes>
-  //     </Router>
-  //   </div>
-  // );
 }
 
 export default App;
