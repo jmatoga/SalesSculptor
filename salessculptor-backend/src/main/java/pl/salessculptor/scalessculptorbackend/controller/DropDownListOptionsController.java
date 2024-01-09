@@ -1,15 +1,9 @@
 package pl.salessculptor.scalessculptorbackend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.salessculptor.scalessculptorbackend.model.*;
-import pl.salessculptor.scalessculptorbackend.repository.AccountRepository;
-import pl.salessculptor.scalessculptorbackend.repository.KeywordRepository;
-import pl.salessculptor.scalessculptorbackend.repository.ProductRepository;
-import pl.salessculptor.scalessculptorbackend.repository.TownRepository;
+import pl.salessculptor.scalessculptorbackend.repository.*;
 
 import java.util.List;
 
@@ -28,20 +22,23 @@ public class DropDownListOptionsController {
     KeywordRepository keywordRepository;
 
     @Autowired
+    AccountPassRepository accountPassRepository;
+
+    @Autowired
     AccountRepository accountRepository;
 
-    @GetMapping("")
-    public DropDownListOptions getAllDropDownListOptions() {
+    @GetMapping("/{accountId}")
+    public DropDownListOptions getAllDropDownListOptions(@PathVariable("accountId") Long accountId) {
         List<Product> products = productRepository.findAll();
         List<Town> towns = townRepository.findAll();
         List<Keyword> keywords = keywordRepository.findAll();
-        List<Account> accounts = accountRepository.findAll();
+        Account account = accountRepository.findById(accountId).get();
 
         DropDownListOptions dropDownListOptions = new DropDownListOptions();
         dropDownListOptions.setTown(towns);
         dropDownListOptions.setProduct(products);
         dropDownListOptions.setKeyword(keywords);
-        dropDownListOptions.setAccount(accounts);
+        dropDownListOptions.setAccount(account);
 
         return dropDownListOptions;
     }

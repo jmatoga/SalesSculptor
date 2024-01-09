@@ -11,7 +11,5 @@ import java.util.List;
 
 @Repository
 public interface TownRepository extends JpaRepository<Town, Long> {
-    @Query("SELECT t FROM Town t ")
-    List<Town> findActiveCampaigns();
 
 }

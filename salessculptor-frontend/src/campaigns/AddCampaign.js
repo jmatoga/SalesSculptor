@@ -24,13 +24,14 @@ export default function AddCampaign() {
       productPrice: "",
     },
     account: {
-      accountId: "",
+      accountId: sessionStorage.getItem("loggedId"),
       accountOwner: "",
       balance: "",
     },
   });
   const [bidAmountErrorMessage, setBidAmountErrorMessage] = useState("");
   const [fundErrorMessage, setFundErrorMessage] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
 
   let navigate = useNavigate();
 
@@ -72,7 +73,9 @@ export default function AddCampaign() {
   const fetchData = async () => {
     try {
       const mainResponse = await axios.get(
-        "http://localhost:8090/dropDownListOptions"
+        `http://localhost:8090/dropDownListOptions/${sessionStorage.getItem(
+          "loggedId"
+        )}`
       );
 
       const { product, town, keyword, account } = mainResponse.data;
@@ -94,18 +97,16 @@ export default function AddCampaign() {
       }));
       setKeywordsList(keywordsData);
 
-      const accountsData = account.map((item) => ({
-        accountId: item.accountId,
-        accountOwner: item.accountOwner,
-        balance: item.balance,
-      }));
       setCampaign({
         ...campaign,
-        account: accountsData[0],
+        account: {
+          accountId: account.accountId,
+          accountOwner: account.accountOwner,
+          balance: account.balance,
+        },
       });
-      console.log(
-        campaign.account[0].accountId + "!" + accountsData[0].accountId
-      );
+
+      console.log(campaign.account.accountId + "!" + account.accountId);
       //console.log(campaign.account.accountId + "!" + accountData.accountId);
     } catch (error) {
       console.error("Error loading data:", error);
@@ -121,6 +122,13 @@ export default function AddCampaign() {
 
   const onInputChange = (e) => {
     setCampaign({ ...campaign, [e.target.name]: e.target.value });
+  };
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    setLoggedIn(false);
+    alert("Logged out successfully!");
+    navigate("/");
   };
 
   const onSubmit = async (e) => {
@@ -149,18 +157,31 @@ export default function AddCampaign() {
     console.log(campaign);
 
     await axios.post("http://localhost:8090/campaigns/addCampaign", campaign);
-    navigate("/");
+    navigate("/campaigns");
   };
 
   return (
     <div className="container">
       <div className="row">
-        <div className="col-md-3 border rounded p-4 mt-2 shadow">
+        <div className="col-md-3 order-md-1 border rounded p-4 mt-2 shadow h-100">
           <h5 className="text-center mb-4">Balance</h5>
-          <h3 className="text-center">${campaign.account.balance}</h3>
-          {/* account info */}
+          <h3 className="text-center">
+            <b>Account owner: </b>
+            <br></br>
+            {campaign.account.accountOwner}
+          </h3>
+          <h4 className="text-center">
+            ${campaign.account.balance}
+            <br></br>
+            <br></br>
+          </h4>
+          <form action="" onSubmit={handleLogout}>
+            <button type="submit" className="btn btn-outline-danger w-100">
+              Log out
+            </button>
+          </form>
         </div>
-        <div className="col-md-9 border rounded p-4 mt-2 shadow">
+        <div className="col-md-9 order-md-2 border rounded p-4 mt-2 shadow">
           <h2 className="text-center mb-4">Add Campaign</h2>
           <form onSubmit={(e) => onSubmit(e)}>
             <div className="mb-3">
@@ -347,7 +368,7 @@ export default function AddCampaign() {
                 }}
               />
             </div>
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label htmlFor="Name" className="form-label">
                 Username
               </label>
@@ -361,17 +382,16 @@ export default function AddCampaign() {
                 title="Please enter a number with up to two decimal places"
                 onChange={(e) => onInputChange(e)}
               />
-            </div>
+            </div> */}
             <button type="submit" className="btn btn-success">
               Submit
             </button>
-            <Link className="btn btn-danger mx-2" to="/">
+            <Link className="btn btn-danger mx-2" to="/campaigns">
               Cancel
             </Link>
           </form>
         </div>
       </div>
-      <div style={{ height: "100px" }}></div>
     </div>
   );
 }

@@ -35,19 +35,9 @@ public class CampaignController {
         return null;
     }
 
-    @GetMapping("")
-    public List<Campaign> getAllCampaigns() {
-        return campaignRepository.findAll();
-    }
-
-    @GetMapping("/active")
-    public List<Campaign> getActiveCampaigns() {
-        return campaignRepository.findActiveCampaigns();
-    }
-
-    @GetMapping("/active1")
-    public List<Campaign> getActiveCampaigns1() {
-        return campaignRepository.findByStatus(CampaignStatus.ON);
+    @GetMapping("/list/{accountId}")
+    public List<Campaign> getCampaignsByAccountId(@PathVariable("accountId") Long accountId) {
+        return campaignRepository.findByAccountId(accountId);
     }
 
     @GetMapping("/active2")
@@ -57,61 +47,31 @@ public class CampaignController {
 
     @GetMapping("withDropDownListOptions/{id}")
     public CampaignProductTownKeywords getById(@PathVariable("id") Long id) {
-// dobre
-//
-//        // Fetch data from repositories
-//        Optional<Campaign> campaign = campaignRepository.findById(id);
-//        // Jeśli Campaign zostało znalezione
-//        if (campaign.isPresent()) {
-//            Optional<Product> product = productRepository.findById(campaign.get().getProduct().getProductId());
-//            Optional<Town> town = townRepository.findById(campaign.get().getTown().getTownId());
-//
-//            // Sprawdź, czy opcjonalne dane są dostępne i przypisz do kampanii
-//            product.ifPresent(campaign.get()::setProduct);
-//            town.ifPresent(campaign.get()::setTown);
-//
-//            return campaign.get();
-//
-//        } else {
-//            throw new CampaignNotFoundException(id);
-//        }
-
         List<Product> products = productRepository.findAll();
         List<Town> towns = townRepository.findAll();
         List<Keyword> keywords = keywordRepository.findAll();
 
-        List<Account> accounts = accountRepository.findAll();
-
-        // Map data and return
         CampaignProductTownKeywords result = new CampaignProductTownKeywords();
         Optional<Campaign> campaign = campaignRepository.findById(id);
-        // Jeśli Campaign zostało znalezione
+
         if (campaign.isPresent()) {
             Optional<Product> product = productRepository.findById(campaign.get().getProduct().getProductId());
             Optional<Town> town = townRepository.findById(campaign.get().getTown().getTownId());
-            //Optional<Town> town = townRepository.findById(campaign.get().getTown().getTownId());
 
-            // Sprawdź, czy opcjonalne dane są dostępne i przypisz do kampanii
             product.ifPresent(campaign.get()::setProduct);
             town.ifPresent(campaign.get()::setTown);
-            //accounts.set(setAccount);
 
             result.setCampaign(campaign.get());
-
         } else {
             throw new CampaignNotFoundException(id);
         }
-
-
 
         result.setTown(towns);
         result.setProduct(products);
         result.setKeyword(keywords);
 
         return result;
-
     }
-
 
     @GetMapping("/{id}")
     Campaign getCampaignById(@PathVariable Long id) {

@@ -10,7 +10,5 @@ import java.util.List;
 
 @Repository
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
-    @Query("SELECT p FROM Product p ")
-    List<Town> findActiveCampaigns();
 
 }

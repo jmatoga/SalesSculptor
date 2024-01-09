@@ -36,9 +36,17 @@ export default function EditCampaign() {
   });
   const [bidAmountErrorMessage, setBidAmountErrorMessage] = useState("");
   const [fundErrorMessage, setFundErrorMessage] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
 
   let navigate = useNavigate();
   const { id } = useParams();
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    setLoggedIn(false);
+    alert("Logged out successfully!");
+    navigate("/");
+  };
 
   useEffect(() => {
     fetchData();
@@ -175,19 +183,32 @@ export default function EditCampaign() {
     });
 
     await axios.put(`http://localhost:8090/campaigns/${id}`, campaign);
-    navigate("/");
+    navigate("/campaigns");
   };
 
   return (
     <div className="container">
       <div className="row">
-        <div className="col-md-3 border rounded p-4 mt-2 shadow">
+        <div className="col-md-3 order-md-1 border rounded p-4 mt-2 shadow h-100">
           <h5 className="text-center mb-4">Balance</h5>
-          <h3 className="text-center">${campaign.account.balance}</h3>
-          {/* add account info */}
+          <h3 className="text-center">
+            <b>Account owner: </b>
+            <br />
+            {campaign.account.accountOwner}
+          </h3>
+          <h4 className="text-center">
+            ${campaign.account.balance}
+            <br />
+            <br />
+          </h4>
+          <form action="" onSubmit={handleLogout}>
+            <button type="submit" className="btn btn-outline-danger w-100">
+              Log out
+            </button>
+          </form>
         </div>
-        <div className="col-md-9 border rounded p-4 mt-2 shadow">
-          <h2 className="text-center mb-4">Edit Campaign</h2>
+        <div className="col-md-9 order-md-2 border rounded p-4 mt-2 shadow">
+          <h2 className="text-center m-4">Edit Campaign</h2>
           <form onSubmit={(e) => onSubmit(e)}>
             <div className="mb-3">
               <label htmlFor="Name" className="form-label">
@@ -209,9 +230,6 @@ export default function EditCampaign() {
                 name="products"
                 options={products}
                 onChange={handleProductChange}
-                // value={products.find(
-                //   (option) => option.value === campaign.productId
-                // )}
                 value={{
                   value: campaign.product.productId,
                   label: `${campaign.product.productId}. ${campaign.product.productName} - ${campaign.product.productPrice}$`,
@@ -241,10 +259,6 @@ export default function EditCampaign() {
                 value={keywordsList.filter((option) =>
                   campaign.keywords.includes(option.label)
                 )}
-                // value={{
-                //   value: keywordsList.keywordId,
-                //   label: keywordsList.keywordName,
-                // }}
                 placeholder="Select keywords..."
                 isSearchable
                 isClearable
@@ -273,12 +287,6 @@ export default function EditCampaign() {
                 pattern="^\d+(\.\d{1,2})?$"
                 value={campaign.bidAmount}
                 onChange={(e) => {
-                  // setCampaign({
-                  //   ...campaign,
-                  //   account: {
-                  //     balance: (campaign.account.balance -= parseFloat(fund)),
-                  //   },
-                  // });
                   onInputChange(e);
                 }}
                 onInvalid={(e) => {
@@ -308,23 +316,6 @@ export default function EditCampaign() {
                 pattern="^\d+(\.\d{1,2})?$"
                 value={campaign.fund}
                 onChange={(e) => {
-                  // setCampaign({
-                  //   ...campaign,
-                  //   account: {
-                  //     balance: (campaign.account.balance -= parseFloat(fund)),
-                  //   },
-                  // });
-                  // if (parseFloat(campaign.fund - e) < campaign.fund) {
-                  //   setFundErrorMessage(
-                  //     "Fund cannot be less than previous fund"
-                  //   );
-                  // } else if (
-                  //   parseFloat(campaign.fund - e) > campaign.account.balance
-                  // ) {
-                  //   setFundErrorMessage("Fund cannot be greater than balance");
-                  // } else {
-                  //   onInputChange(e);
-                  // }
                   onInputChange(e);
                 }}
                 onInvalid={(e) => {
@@ -365,12 +356,10 @@ export default function EditCampaign() {
                 name="towns"
                 options={towns}
                 onChange={handleTownChange}
-                //value={towns.find((option) => option.value === campaign.town)}
                 value={{
                   value: campaign.town.townId,
                   label: campaign.town.townName,
                 }}
-                //value={towns.find((option) => option.value === campaign.town)}
                 placeholder="Select a town"
                 isSearchable
                 isClearable
@@ -408,31 +397,226 @@ export default function EditCampaign() {
                 }}
               />
             </div>
-            <div className="mb-3">
-              <label htmlFor="Name" className="form-label">
-                Username
-              </label>
-              <input
-                type={"text"}
-                className="form-control"
-                placeholder="Enter accountId:"
-                name="accountId"
-                pattern="^\d+(\.\d{1,2})?$"
-                value={campaign.accountId}
-                title="Please enter a number with up to two decimal places"
-                onChange={(e) => onInputChange(e)}
-              />
-            </div>
             <button type="submit" className="btn btn-success">
               Submit
             </button>
-            <Link className="btn btn-danger mx-2" to="/">
+            <Link className="btn btn-danger mx-2" to="/campaigns">
               Cancel
             </Link>
           </form>
         </div>
       </div>
-      <div style={{ height: "100px" }}></div>
     </div>
   );
+
+  // return (
+  //   <div className="container">
+  //     <div className="row">
+  //       <div className="col-md-3 border rounded p-4 mt-2 shadow">
+  //         <h5 className="text-center mb-4">Balance</h5>
+  //         <h3 className="text-center">${campaign.account.balance}</h3>
+  //         {/* add account info */}
+  //       </div>
+  //       <div className="col-md-9 border rounded p-4 mt-2 shadow">
+  //         <h2 className="text-center mb-4">Edit Campaign</h2>
+  //         <form onSubmit={(e) => onSubmit(e)}>
+  //           <div className="mb-3">
+  //             <label htmlFor="Name" className="form-label">
+  //               Name
+  //             </label>
+  //             <input
+  //               type={"text"}
+  //               className="form-control"
+  //               placeholder="Enter Name of your Campaign"
+  //               name="name"
+  //               value={campaign.name}
+  //               onChange={(e) => onInputChange(e)}
+  //             />
+  //           </div>
+  //           <div className="mb-3">
+  //             <label htmlFor="products">Product</label>
+  //             <Select
+  //               id="products"
+  //               name="products"
+  //               options={products}
+  //               onChange={handleProductChange}
+  //               value={{
+  //                 value: campaign.product.productId,
+  //                 label: `${campaign.product.productId}. ${campaign.product.productName} - ${campaign.product.productPrice}$`,
+  //               }}
+  //               placeholder="Select product"
+  //               isSearchable
+  //               isClearable
+  //               required
+  //               onInvalid={(e) => {
+  //                 e.target.setCustomValidity("Please select a product");
+  //               }}
+  //               onBlur={(e) => {
+  //                 e.target.setCustomValidity("");
+  //               }}
+  //               styles={{
+  //                 control: (provided) => ({ ...provided, textAlign: "left" }),
+  //               }}
+  //             />
+  //           </div>
+  //           <div className="mb-3">
+  //             <label htmlFor="keywords">Keywords</label>
+  //             <Select
+  //               id="keywords"
+  //               name="keywords"
+  //               options={keywordsList}
+  //               onChange={handleKeywordChange}
+  //               value={keywordsList.filter((option) =>
+  //                 campaign.keywords.includes(option.label)
+  //               )}
+  //               placeholder="Select keywords..."
+  //               isSearchable
+  //               isClearable
+  //               required
+  //               isMulti // to allow multiple keywords
+  //               onInvalid={(e) => {
+  //                 e.target.setCustomValidity("Please select keywords");
+  //               }}
+  //               onBlur={(e) => {
+  //                 e.target.setCustomValidity("");
+  //               }}
+  //               styles={{
+  //                 control: (provided) => ({ ...provided, textAlign: "left" }),
+  //               }}
+  //             />
+  //           </div>
+  //           <div className="mb-3">
+  //             <label htmlFor="BidAmount" className="form-label">
+  //               Bid Amount
+  //             </label>
+  //             <input
+  //               type={"text"}
+  //               className="form-control"
+  //               placeholder="Enter bid amount"
+  //               name="bidAmount"
+  //               pattern="^\d+(\.\d{1,2})?$"
+  //               value={campaign.bidAmount}
+  //               onChange={(e) => {
+  //                 onInputChange(e);
+  //               }}
+  //               onInvalid={(e) => {
+  //                 e.target.setCustomValidity(
+  //                   "Please enter a number with up to two decimal places"
+  //                 );
+  //               }}
+  //               onBlur={(e) => {
+  //                 e.target.setCustomValidity("");
+  //               }}
+  //             />
+  //             {bidAmountErrorMessage && (
+  //               <p style={{ color: "red", marginTop: "5px" }}>
+  //                 {bidAmountErrorMessage}
+  //               </p>
+  //             )}
+  //           </div>
+  //           <div className="mb-3">
+  //             <label htmlFor="Fund" className="form-label">
+  //               Fund
+  //             </label>
+  //             <input
+  //               type={"text"}
+  //               className="form-control"
+  //               placeholder="Enter fund"
+  //               name="fund"
+  //               pattern="^\d+(\.\d{1,2})?$"
+  //               value={campaign.fund}
+  //               onChange={(e) => {
+  //                 onInputChange(e);
+  //               }}
+  //               onInvalid={(e) => {
+  //                 e.target.setCustomValidity(
+  //                   "Please enter a number with up to two decimal places"
+  //                 );
+  //               }}
+  //               onBlur={(e) => {
+  //                 e.target.setCustomValidity("");
+  //               }}
+  //             />
+  //             {fundErrorMessage && (
+  //               <p style={{ color: "red", marginTop: "5px" }}>
+  //                 {fundErrorMessage}
+  //               </p>
+  //             )}
+  //           </div>
+  //           <div className="mb-3">
+  //             <label htmlFor="Status" className="form-label">
+  //               Status
+  //             </label>
+  //             <select
+  //               className="form-control"
+  //               name="status"
+  //               value={campaign.status}
+  //               onChange={(e) => onInputChange(e)}
+  //             >
+  //               <option value="ON">ON</option>
+  //               <option value="OFF">OFF</option>
+  //             </select>
+  //           </div>
+  //           <div className="mb-3">
+  //             <label htmlFor="towns" className="form-label">
+  //               Town
+  //             </label>
+  //             <Select
+  //               id="towns"
+  //               name="towns"
+  //               options={towns}
+  //               onChange={handleTownChange}
+  //               value={{
+  //                 value: campaign.town.townId,
+  //                 label: campaign.town.townName,
+  //               }}
+  //               placeholder="Select a town"
+  //               isSearchable
+  //               isClearable
+  //               required
+  //               onInvalid={(e) => {
+  //                 e.target.setCustomValidity("Please select a town");
+  //               }}
+  //               onBlur={(e) => {
+  //                 e.target.setCustomValidity("");
+  //               }}
+  //               styles={{
+  //                 control: (provided) => ({ ...provided, textAlign: "left" }),
+  //               }}
+  //             />
+  //           </div>
+  //           <div className="mb-3">
+  //             <label htmlFor="Radius" className="form-label">
+  //               Radius
+  //             </label>
+  //             <input
+  //               type={"text"}
+  //               className="form-control"
+  //               placeholder="Enter radius in kilometers"
+  //               name="radius"
+  //               pattern="\d+"
+  //               value={campaign.radius}
+  //               onChange={(e) => onInputChange(e)}
+  //               onInvalid={(e) => {
+  //                 e.target.setCustomValidity(
+  //                   "Please enter a valid number in kilometers"
+  //                 );
+  //               }}
+  //               onBlur={(e) => {
+  //                 e.target.setCustomValidity("");
+  //               }}
+  //             />
+  //           </div>
+  //           <button type="submit" className="btn btn-success">
+  //             Submit
+  //           </button>
+  //           <Link className="btn btn-danger mx-2" to="/campaigns">
+  //             Cancel
+  //           </Link>
+  //         </form>
+  //       </div>
+  //     </div>
+  //     <div style={{ height: "100px" }}></div>
+  //   </div>
+  // );
 }

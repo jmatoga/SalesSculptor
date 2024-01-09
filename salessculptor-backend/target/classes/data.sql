@@ -1,9 +1,16 @@
-INSERT INTO EmeraldAccount (account_owner, balance)
-VALUES ('User1', 5000.00),
-       ('User2', 7000.00),
-       ('User3', 3000.00),
-       ('User4', 10000.00),
-       ('User5', 9000.00);
+INSERT INTO Emerald_Account (account_owner, balance)
+VALUES ('John Doe', 5000.00),
+       ('Emily Johnson', 4000.00),
+       ('Marcus Thompson', 3000.00),
+       ('Benjamin Harris', 2000.00),
+       ('Sophia Martinez', 1000.00);
+
+INSERT INTO Emerald_Account_Pass (username, password_hash, salt, account_id)
+VALUES ('user1', '96aa727a2c838f86536a0e4bcb40c9286cee2d0927909a323080260a7ed73a15', '938fd4b31b68a521', 1),
+       ('user2', 'fa57d4731dbc942e5a76038b547cfb7f41a14d951c2babae743a7fbeee3f35e4', '7ac96258f6db0753', 2),
+       ('user3', '0323942502922253c2fc9b814dcf4b174ff7eedf54dec2b4fed6dcc835e2f18f', '09c736f8463589ac', 3),
+       ('user4', 'a2051111cf302482d7b6d652011b9aba9beec5a868bdd3e94d8bdd47037d63f8', 'b8e4a5ce3b4f2f04', 4),
+       ('user5', 'ea6ee44d47c8f794d26c375eadc585e1d7ad4c9472b1bfbb7d31b6fd37e4a0b5', '6d4f6d4f2158721e', 5);
 
 INSERT INTO Towns (town_name)
 VALUES ('New Jork'),

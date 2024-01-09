@@ -4,4 +4,3 @@ public enum CampaignStatus {
     ON,
     OFF
 }
-

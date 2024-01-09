@@ -10,7 +10,5 @@ import java.util.List;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    @Query("SELECT p FROM Product p ")
-    List<Town> findActiveCampaigns();
 
 }

@@ -13,6 +13,5 @@ public class DropDownListOptions {
     private List<Product> product;
     private List<Town> town;
     private List<Keyword> keyword;
-    private List<Account> account;
-
+    private Account account;
 }

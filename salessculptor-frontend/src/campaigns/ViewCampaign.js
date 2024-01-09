@@ -1,10 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 export default function ViewCampaign() {
   const [campaign, setCampaign] = useState({
-    accountId: "1",
     campaignId: "",
     name: "",
     keywords: "",
@@ -22,9 +21,15 @@ export default function ViewCampaign() {
       productDesc: "",
       productPrice: "",
     },
+    account: {
+      accountId: sessionStorage.getItem("loggedId"),
+      accountOwner: "",
+      balance: "",
+    },
   });
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  const balance = 1000;
+  let navigate = useNavigate();
 
   const { id } = useParams();
 
@@ -37,6 +42,13 @@ export default function ViewCampaign() {
     }
   };
 
+  const handleLogout = () => {
+    sessionStorage.clear();
+    setLoggedIn(false);
+    alert("Logged out successfully!");
+    navigate("/");
+  };
+
   useEffect(() => {
     loadCampaign();
   }, [id]);
@@ -44,7 +56,25 @@ export default function ViewCampaign() {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-md-9 offset-md-2 border rounded p-4 mt-2 shadow">
+        <div className="col-md-3 order-md-1 border rounded p-4 mt-2 shadow h-100">
+          <h5 className="text-center mb-4">Balance</h5>
+          <h3 className="text-center">
+            <b>Account owner: </b>
+            <br></br>
+            {campaign.account.accountOwner}
+          </h3>
+          <h4 className="text-center">
+            ${campaign.account.balance}
+            <br></br>
+            <br></br>
+          </h4>
+          <form action="" onSubmit={handleLogout}>
+            <button type="submit" className="btn btn-outline-danger w-100">
+              Log out
+            </button>
+          </form>
+        </div>
+        <div className="col-md-9 order-md-2 border rounded p-4 mt-2 shadow">
           <h2 className="text-center m-4">Campaign Details</h2>
           <div className="card">
             <div className="card-header">
@@ -95,7 +125,7 @@ export default function ViewCampaign() {
               </ul>
             </div>
           </div>
-          <Link className="btn btn-primary my-2" to="/">
+          <Link className="btn btn-primary my-2" to="/campaigns">
             Back to list of campaigns
           </Link>
         </div>
