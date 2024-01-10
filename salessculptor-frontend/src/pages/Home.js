@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
-export default function Home() {
+export default function Home({ handleLogoutApp }) {
   const [main, setMain] = useState([]);
   const [account, setAccount] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(false);
 
   const { id } = useParams();
 
@@ -54,7 +53,7 @@ export default function Home() {
 
   const handleLogout = () => {
     sessionStorage.clear();
-    setLoggedIn(false);
+    handleLogoutApp();
     alert("Logged out successfully!");
     navigate("/");
   };

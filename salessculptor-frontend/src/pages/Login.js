@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Validation from "./LoginValidation";
 import axios from "axios";
 
-function Login() {
+function Login({ handleLogin }) {
   const [values, setValues] = useState({
     username: "",
     passwordHash: "",
@@ -32,7 +32,9 @@ function Login() {
         .then((res) => {
           alert("Logged successfully!");
           sessionStorage.setItem("loggedIn", "true");
+
           sessionStorage.setItem("loggedId", res.data.split(": ").pop());
+          handleLogin();
           navigate("/campaigns");
         })
         .catch((error) => {
@@ -60,10 +62,17 @@ function Login() {
 
   return (
     <div className="d-flex justify-content-center align-items-center bg-primary vh-100">
-      <div className="bg-white p-3 rounded w-25">
+      <div className="bg-white p-3 rounded w-25 text-center">
+        <h1 className="mb-4">
+          Welcome to Sales Sculptor<br></br>
+          <br></br>
+        </h1>
         <form action="" onSubmit={handleSubmit}>
           <div className="mb-3">
-            <h2 className="text-center">Login to your account</h2>
+            <h3 className="text-center">
+              Login to your account<br></br>
+              <br></br>
+            </h3>
             <label htmlFor="username">
               <b>Username</b>
             </label>

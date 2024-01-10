@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
-export default function ViewCampaign() {
+export default function ViewCampaign({ handleLogoutApp }) {
   const [campaign, setCampaign] = useState({
     campaignId: "",
     name: "",
@@ -44,7 +44,7 @@ export default function ViewCampaign() {
 
   const handleLogout = () => {
     sessionStorage.clear();
-    setLoggedIn(false);
+    handleLogoutApp();
     alert("Logged out successfully!");
     navigate("/");
   };

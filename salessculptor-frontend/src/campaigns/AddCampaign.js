@@ -3,7 +3,7 @@ import Select from "react-select";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function AddCampaign() {
+export default function AddCampaign({ handleLogoutApp }) {
   const [towns, setTowns] = useState([]);
   const [products, setProducts] = useState([]);
   const [keywordsList, setKeywordsList] = useState([]);
@@ -123,7 +123,7 @@ export default function AddCampaign() {
 
   const handleLogout = () => {
     sessionStorage.clear();
-    setLoggedIn(false);
+    handleLogoutApp();
     alert("Logged out successfully!");
     navigate("/");
   };

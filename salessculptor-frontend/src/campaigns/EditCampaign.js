@@ -3,7 +3,7 @@ import Select from "react-select";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-export default function EditCampaign() {
+export default function EditCampaign({ handleLogoutApp }) {
   const [towns, setTowns] = useState([]);
   const [products, setProducts] = useState([]);
   const [keywordsList, setKeywordsList] = useState([]);
@@ -43,7 +43,7 @@ export default function EditCampaign() {
 
   const handleLogout = () => {
     sessionStorage.clear();
-    setLoggedIn(false);
+    handleLogoutApp();
     alert("Logged out successfully!");
     navigate("/");
   };

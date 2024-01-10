@@ -15,28 +15,47 @@ import EditCampaign from "./campaigns/EditCampaign";
 import ViewCampaign from "./campaigns/ViewCampaign";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(
+    sessionStorage.getItem("loggedIn") === "true"
+  );
 
-  useEffect(() => {
-    const isLoggedIn = sessionStorage.getItem("loggedIn"); // Check if the user is logged in to localStorage
-    if (isLoggedIn) {
-      setLoggedIn(true); // setting the logged in status based on data from localStorage
-    }
-  }, []);
+  const handleLogin = () => {
+    setLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setLoggedIn(false);
+    sessionStorage.setItem("loggedIn", "false");
+    sessionStorage.removeItem("loggedId");
+  };
 
   return (
     <div className="App">
       <Router>
-        <Navbar />
+        {loggedIn && <Navbar />}
         <Routes>
-          {!loggedIn && <Route path="/" element={<Login />} />}
+          {!loggedIn && (
+            <Route path="/" element={<Login handleLogin={handleLogin} />} />
+          )}
           {loggedIn && (
             <>
-              <Route path="/" element={<Login />} />
-              <Route path="/campaigns" element={<Home />} />
-              <Route path="/addCampaign" element={<AddCampaign />} />
-              <Route path="/editCampaign/:id" element={<EditCampaign />} />
-              <Route path="/viewCampaign/:id" element={<ViewCampaign />} />
+              <Route path="/" element={<Login handleLogin={handleLogin} />} />
+              <Route
+                path="/campaigns"
+                element={<Home handleLogoutApp={handleLogout} />}
+              />
+              <Route
+                path="/addCampaign"
+                element={<AddCampaign handleLogoutApp={handleLogout} />}
+              />
+              <Route
+                path="/editCampaign/:id"
+                element={<EditCampaign handleLogoutApp={handleLogout} />}
+              />
+              <Route
+                path="/viewCampaign/:id"
+                element={<ViewCampaign handleLogoutApp={handleLogout} />}
+              />
             </>
           )}
           {!loggedIn && (
