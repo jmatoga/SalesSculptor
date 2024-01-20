@@ -35,3 +35,10 @@ Perform CRUD operations for entities (e.g., Account, Campaign) using the UI.
 - `user4` `password4`
 - `user5` `password5`
 
+# Working presentation
+
+<p align="center">
+   <img src="Presentation_video.gif" alt="Gif 1">
+</p>
+<br>
+
